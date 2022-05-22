@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { mutate } from "swr";
 import { FormError, FormProps, PetForm, TResponse } from "../@types/types";
 
-const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet = true }) => {
+const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
   const router = useRouter();
   const contentType = "application/json";
   const [errors, setErrors] = useState({});
@@ -96,12 +96,7 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet = true }) => {
 
   /* Makes sure pet info is filled for pet name, owner name, species, and image url*/
   const formValidate = () => {
-    let err: FormError = {
-      name: "",
-      owner_name: "",
-      species: "",
-      image_url: "",
-    };
+    let err: FormError = {} as FormError;
     if (!form.name) err.name = "Name is required";
     if (!form.owner_name) err.owner_name = "Owner is required";
     if (!form.species) err.species = "Species is required";
