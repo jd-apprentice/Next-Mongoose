@@ -33,6 +33,12 @@ export interface PetProps {
   pet: PetsType;
 }
 
+export interface ServerSideProps {
+  params: {
+    id: string;
+  };
+}
+
 export type TResponse = {
   ok: boolean;
   status: number | undefined;

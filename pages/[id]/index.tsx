@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import dbConnect from "../../lib/dbConnect";
 import Pet from "../../models/Pet";
-import { PetProps } from "../../@types/types";
+import { PetProps, ServerSideProps } from "../../@types/types";
 
 /* Allows you to view pet card info and delete pet card*/
 const PetPage = ({ pet }: PetProps) => {
@@ -64,7 +64,8 @@ const PetPage = ({ pet }: PetProps) => {
   );
 };
 
-export async function getServerSideProps({ params }) {
+export async function getServerSideProps(props: ServerSideProps) {
+  const { params } = props;
   await dbConnect();
 
   const pet = await Pet.findById(params.id).lean();
