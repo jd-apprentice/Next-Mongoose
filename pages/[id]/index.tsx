@@ -4,6 +4,7 @@ import Link from "next/link";
 import dbConnect from "../../lib/dbConnect";
 import Pet from "../../models/Pet";
 import { PetProps, ServerSideProps } from "../../@types/types";
+import Image from "next/image";
 
 /* Allows you to view pet card info and delete pet card*/
 const PetPage = ({ pet }: PetProps) => {
@@ -25,7 +26,7 @@ const PetPage = ({ pet }: PetProps) => {
   return (
     <div key={pet._id}>
       <div className="card">
-        <img src={pet.image_url} />
+        <Image src={pet.image_url} alt={pet.name} layout="responsive" />
         <h5 className="pet-name">{pet.name}</h5>
         <div className="main-content">
           <p className="pet-name">{pet.name}</p>

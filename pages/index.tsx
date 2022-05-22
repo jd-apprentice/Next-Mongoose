@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Pets } from "../@types/types";
 import dbConnect from "../lib/dbConnect";
 import Pet from "../models/Pet";
+import Image from "next/image";
 
 const Index = ({ pets }: Pets) => (
   <>
@@ -9,7 +10,7 @@ const Index = ({ pets }: Pets) => (
     {pets.map((pet) => (
       <div key={pet._id}>
         <div className="card">
-          <img src={pet.image_url} />
+          <Image src={pet.image_url} alt={pet.name} layout="fill" />
           <h5 className="pet-name">{pet.name}</h5>
           <div className="main-content">
             <p className="pet-name">{pet.name}</p>
