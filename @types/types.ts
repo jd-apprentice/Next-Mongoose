@@ -33,6 +33,17 @@ export interface PetProps {
   pet: PetsType;
 }
 
+export type TResponse = {
+  ok: boolean;
+  status: number | undefined;
+  json: () => Promise<any>;
+};
+
+export type App = {
+  Component: any;
+  pageProps: any;
+};
+
 export type FormError = Omit<
   PetForm,
   "age" | "poddy_trained" | "diet" | "likes" | "dislikes"

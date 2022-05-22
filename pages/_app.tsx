@@ -1,9 +1,10 @@
-import '../css/style.css'
-import '../css/form.css'
-import Head from 'next/head'
-import Link from 'next/link'
+import "../css/style.css";
+import "../css/form.css";
+import Head from "next/head";
+import Link from "next/link";
+import { App } from "../@types/types";
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: App) {
   return (
     <>
       <Head>
@@ -30,7 +31,7 @@ function MyApp({ Component, pageProps }) {
         <Component {...pageProps} />
       </div>
     </>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;

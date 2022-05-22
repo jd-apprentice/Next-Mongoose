@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { mutate } from "swr";
-import { FormError, FormProps, PetForm } from "../@types/types";
+import { FormError, FormProps, PetForm, TResponse } from "../@types/types";
 
 const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet = true }) => {
   const router = useRouter();
@@ -26,7 +26,7 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet = true }) => {
     const { id } = router.query;
 
     try {
-      const res = await fetch(`/api/pets/${id}`, {
+      const res: TResponse = await fetch(`/api/pets/${id}`, {
         method: "PUT",
         headers: {
           Accept: contentType,
@@ -37,7 +37,7 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet = true }) => {
 
       // Throw error with status code in case Fetch API req failed
       if (!res.ok) {
-        throw new Error(res.status);
+        throw new Error(res.status?.toString());
       }
 
       const { data } = await res.json();
@@ -63,7 +63,7 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet = true }) => {
 
       // Throw error with status code in case Fetch API req failed
       if (!res.ok) {
-        throw new Error(res.status);
+        throw new Error(res.status.toString());
       }
 
       router.push("/");
