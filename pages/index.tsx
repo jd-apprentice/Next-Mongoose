@@ -50,7 +50,7 @@ const Index = ({ pets }: Pets) => (
 );
 
 /* Retrieves pet(s) data from mongodb database */
-export async function getStaticProps() {
+export async function getServerSideProps() {
   await dbConnect();
 
   /* find all the data in our database */
