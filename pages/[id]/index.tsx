@@ -26,7 +26,7 @@ const PetPage = ({ pet }: PetProps) => {
   return (
     <div key={pet._id}>
       <div className="card">
-        <Image src={pet.image_url} alt={pet.name} layout="responsive" />
+        <Image src={pet.image_url} alt={pet.name} layout="fill" />
         <h5 className="pet-name">{pet.name}</h5>
         <div className="main-content">
           <p className="pet-name">{pet.name}</p>
