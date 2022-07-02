@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { mutate } from "swr";
 import { FormError, FormProps, PetForm, TResponse } from "../@types/types";
+import { CloudinaryImage } from "@cloudinary/url-gen";
 
 const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
   const router = useRouter();
@@ -32,7 +33,18 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
           Accept: contentType,
           "Content-Type": contentType,
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          name: form.name,
+          owner_name: form.owner_name,
+          species: form.species,
+          age: form.age,
+          poddy_trained: form.poddy_trained,
+          diet: form.diet,
+          image_url:
+            "https://res.cloudinary.com/demo/image/fetch/" + form.image_url,
+          likes: form.likes,
+          dislikes: form.dislikes,
+        }),
       });
 
       // Throw error with status code in case Fetch API req failed
@@ -58,7 +70,18 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
           Accept: contentType,
           "Content-Type": contentType,
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          name: form.name,
+          owner_name: form.owner_name,
+          species: form.species,
+          age: form.age,
+          poddy_trained: form.poddy_trained,
+          diet: form.diet,
+          image_url:
+            "https://res.cloudinary.com/demo/image/fetch/" + form.image_url,
+          likes: form.likes,
+          dislikes: form.dislikes,
+        }),
       });
 
       // Throw error with status code in case Fetch API req failed

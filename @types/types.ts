@@ -1,3 +1,5 @@
+import { CloudinaryImage } from "@cloudinary/url-gen";
+
 export interface PetForm {
   name: string;
   owner_name: string;
@@ -5,7 +7,7 @@ export interface PetForm {
   age: number;
   poddy_trained: boolean;
   diet: string[];
-  image_url: string;
+  image_url: string | CloudinaryImage | undefined | any;
   likes: string[];
   dislikes: string[];
 }

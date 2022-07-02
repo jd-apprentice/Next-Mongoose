@@ -8,6 +8,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.4.1",
+    "@cloudinary/url-gen": "^1.8.0",
     "mongoose": "^6.3.4",
     "next": "latest",
     "react": "^17.0.2",
