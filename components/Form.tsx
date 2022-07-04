@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import { mutate } from "swr";
 import { FormError, FormProps, PetForm, TResponse } from "../@types/types";
-import { CloudinaryImage } from "@cloudinary/url-gen";
+import { urlSlicer } from "../utils";
 
 const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
   const router = useRouter();
@@ -21,6 +21,8 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
     likes: petForm.likes,
     dislikes: petForm.dislikes,
   });
+
+  console.log(urlSlicer(form.image_url));
 
   /* The PUT method edits an existing entry in the mongodb database. */
   const putData = async (form: PetForm) => {
@@ -41,7 +43,8 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
           poddy_trained: form.poddy_trained,
           diet: form.diet,
           image_url:
-            "https://res.cloudinary.com/demo/image/fetch/" + form.image_url,
+            "https://res.cloudinary.com/demo/image/fetch/" +
+            urlSlicer(form.image_url),
           likes: form.likes,
           dislikes: form.dislikes,
         }),
@@ -78,7 +81,8 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
           poddy_trained: form.poddy_trained,
           diet: form.diet,
           image_url:
-            "https://res.cloudinary.com/demo/image/fetch/" + form.image_url,
+            "https://res.cloudinary.com/demo/image/fetch/" +
+            urlSlicer(form.image_url),
           likes: form.likes,
           dislikes: form.dislikes,
         }),
