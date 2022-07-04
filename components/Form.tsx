@@ -22,8 +22,6 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
     dislikes: petForm.dislikes,
   });
 
-  console.log(urlSlicer(form.image_url));
-
   /* The PUT method edits an existing entry in the mongodb database. */
   const putData = async (form: PetForm) => {
     const { id } = router.query;
