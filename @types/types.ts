@@ -1,5 +1,16 @@
 import { CloudinaryImage } from "@cloudinary/url-gen";
 
+export interface StaticImageData {
+  src: string;
+  height: number;
+  width: number;
+  blurDataURL?: string;
+}
+interface StaticRequire {
+  default: StaticImageData;
+}
+declare type StaticImport = StaticRequire | StaticImageData;
+
 export interface PetForm {
   name: string;
   owner_name: string;
@@ -17,7 +28,7 @@ export interface FormProps {
 export interface PetsType {
   _id: string;
   name: string;
-  image_url: CloudinaryImage | undefined | Blob | File | string;
+  image_url: string | StaticImport;
   owner_name: string;
 }
 
