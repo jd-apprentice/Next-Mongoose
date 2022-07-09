@@ -5,11 +5,7 @@ export interface PetForm {
   owner_name: string;
   species: string;
   age: number;
-  poddy_trained: boolean;
-  diet: string[];
-  image_url: string | CloudinaryImage | undefined | any;
-  likes: string[];
-  dislikes: string[];
+  image_url: File | string;
 }
 
 export interface FormProps {
@@ -21,10 +17,8 @@ export interface FormProps {
 export interface PetsType {
   _id: string;
   name: string;
-  image_url: string;
+  image_url: CloudinaryImage | undefined | Blob | File | string;
   owner_name: string;
-  likes: string[];
-  dislikes: string[];
 }
 
 export interface Pets {

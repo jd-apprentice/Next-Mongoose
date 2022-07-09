@@ -10,30 +10,11 @@ const Index = ({ pets }: Pets) => (
     {pets.map((pet) => (
       <div key={pet._id}>
         <div className="card">
-          <Image src={pet.image_url} alt={pet.name} layout="fill" />
+          <Image src={pet.image_url} layout="fill" alt="image" />
           <h5 className="pet-name">{pet.name}</h5>
           <div className="main-content">
             <p className="pet-name">{pet.name}</p>
             <p className="owner">Owner: {pet.owner_name}</p>
-
-            {/* Extra Pet Info: Likes and Dislikes */}
-            <div className="likes info">
-              <p className="label">Likes</p>
-              <ul>
-                {pet.likes.map((data, index) => (
-                  <li key={index}>{data} </li>
-                ))}
-              </ul>
-            </div>
-            <div className="dislikes info">
-              <p className="label">Dislikes</p>
-              <ul>
-                {pet.dislikes.map((data, index) => (
-                  <li key={index}>{data} </li>
-                ))}
-              </ul>
-            </div>
-
             <div className="btn-container">
               <Link href="/[id]/edit" as={`/${pet._id}/edit`}>
                 <button className="btn edit">Edit</button>

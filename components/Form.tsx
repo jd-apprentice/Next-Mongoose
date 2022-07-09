@@ -1,32 +1,41 @@
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
 import { useRouter } from "next/router";
-import { mutate } from "swr";
 import { FormError, FormProps, PetForm, TResponse } from "../@types/types";
-import { urlSlicer } from "../utils";
+import { storage } from "../config/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { v4 } from "uuid";
+import { mutate } from "swr";
 
 const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
   const router = useRouter();
   const contentType = "application/json";
   const [errors, setErrors] = useState({});
-  const [message, setMessage] = useState("");
+  const [imageUpload, setImageUpload] = useState<File>();
+  const [imageURL, setImageURL] = useState<string>();
 
   const [form, setForm] = useState<PetForm>({
     name: petForm.name,
     owner_name: petForm.owner_name,
     species: petForm.species,
     age: petForm.age,
-    poddy_trained: petForm.poddy_trained,
-    diet: petForm.diet,
     image_url: petForm.image_url,
-    likes: petForm.likes,
-    dislikes: petForm.dislikes,
   });
 
-  /* The PUT method edits an existing entry in the mongodb database. */
-  const putData = async (form: PetForm) => {
-    const { id } = router.query;
+  const uploadFile = async () => {
+    if (imageUpload == null) return;
+    const imageRef = ref(storage, `images/${imageUpload.name + v4()}`);
+    await uploadBytes(imageRef, imageUpload).then(async (snapshot) => {
+      await getDownloadURL(snapshot.ref).then((url) => {
+        setImageURL(url);
+      });
+    });
+  };
 
+  /* The PUT method edits an existing entry in the mongodb database. */
+  const putData = async (form: PetForm, firebaseURL: string) => {
+    const { id } = router.query;
     try {
+      imageURL && imageURL ? null : uploadFile();
       const res: TResponse = await fetch(`/api/pets/${id}`, {
         method: "PUT",
         headers: {
@@ -38,13 +47,7 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
           owner_name: form.owner_name,
           species: form.species,
           age: form.age,
-          poddy_trained: form.poddy_trained,
-          diet: form.diet,
-          image_url:
-            "https://res.cloudinary.com/demo/image/fetch/" +
-            urlSlicer(form.image_url),
-          likes: form.likes,
-          dislikes: form.dislikes,
+          image_url: firebaseURL,
         }),
       });
 
@@ -58,13 +61,14 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
       mutate(`/api/pets/${id}`, data, false); // Update the local data without a revalidation
       router.push("/");
     } catch (error) {
-      setMessage("Failed to update pet");
+      console.error(error);
     }
   };
 
   /* The POST method adds a new entry in the mongodb database. */
-  const postData = async (form: PetForm) => {
+  const postData = async (form: PetForm, firebaseURL: string) => {
     try {
+      await uploadFile();
       const res = await fetch("/api/pets", {
         method: "POST",
         headers: {
@@ -76,13 +80,7 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
           owner_name: form.owner_name,
           species: form.species,
           age: form.age,
-          poddy_trained: form.poddy_trained,
-          diet: form.diet,
-          image_url:
-            "https://res.cloudinary.com/demo/image/fetch/" +
-            urlSlicer(form.image_url),
-          likes: form.likes,
-          dislikes: form.dislikes,
+          image_url: firebaseURL,
         }),
       });
 
@@ -93,15 +91,13 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
 
       router.push("/");
     } catch (error) {
-      setMessage("Failed to add pet");
+      console.error(error);
     }
   };
 
-  const handleChange = (e: any) => {
-    const target = e.target;
-    const value =
-      target.name === "poddy_trained" ? target.checked : target.value;
-    const name = target.name;
+  const handleChange = (e: { target: any }) => {
+    const { target } = e;
+    const { value, name } = target;
 
     setForm({
       ...form,
@@ -113,7 +109,7 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
     e.preventDefault();
     const errs = formValidate();
     if (Object.keys(errs).length === 0) {
-      forNewPet ? postData(form) : putData(form);
+      forNewPet ? postData(form, imageURL!) : putData(form, imageURL!);
     } else {
       setErrors({ errs });
     }
@@ -125,7 +121,6 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
     if (!form.name) err.name = "Name is required";
     if (!form.owner_name) err.owner_name = "Owner is required";
     if (!form.species) err.species = "Species is required";
-    if (!form.image_url) err.image_url = "Image URL is required";
     return err;
   };
 
@@ -170,52 +165,19 @@ const Form: React.FC<FormProps> = ({ formId, petForm, forNewPet }) => {
           onChange={handleChange}
         />
 
-        <label htmlFor="poddy_trained">Potty Trained</label>
+        <label htmlFor="image_url">Image</label>
         <input
-          type="checkbox"
-          name="poddy_trained"
-          checked={form.poddy_trained}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="diet">Diet</label>
-        <textarea
-          name="diet"
-          maxLength={60}
-          value={form.diet}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="image_url">Image URL</label>
-        <input
-          type="url"
+          style={{ padding: "5px" }}
+          type="file"
           name="image_url"
-          value={form.image_url}
-          onChange={handleChange}
-          required
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            setImageUpload(event.target.files![0]);
+          }}
         />
-
-        <label htmlFor="likes">Likes</label>
-        <textarea
-          name="likes"
-          maxLength={60}
-          value={form.likes}
-          onChange={handleChange}
-        />
-
-        <label htmlFor="dislikes">Dislikes</label>
-        <textarea
-          name="dislikes"
-          maxLength={60}
-          value={form.dislikes}
-          onChange={handleChange}
-        />
-
         <button type="submit" className="btn">
           Submit
         </button>
       </form>
-      <p>{message}</p>
       <div>
         {Object.keys(errors).map((err, index) => (
           <li key={index}>{err}</li>
